@@ -1,6 +1,6 @@
 ---
 Name: dropzone
-After: 'framework/*'
+After: 'assets/*'
 ---
 UncleCheese\Dropzone\FileAttachmentField:
   default_config_path: 'javascript/default_config.json'
