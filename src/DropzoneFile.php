@@ -1,5 +1,4 @@
 <?php
-
 namespace UncleCheese\Dropzone;
 
 use SilverStripe\Assets\Folder;
@@ -17,8 +16,6 @@ use SilverStripe\ORM\DataExtension;
  */
 class DropzoneFile extends DataExtension
 {
-
-
     /**
      * Helper method for determining if this is an Image
      *
@@ -28,7 +25,6 @@ class DropzoneFile extends DataExtension
     {
         return $this->owner instanceof Image;
     }
-
 
     /**
      * Gets a thumbnail for this file given a size. If it's an Image,
@@ -41,27 +37,30 @@ class DropzoneFile extends DataExtension
      */
     public function getPreviewThumbnail($w = null, $h = null)
     {
-        if(!$w) { $w = $this->owner->config()->grid_thumbnail_width;
-        }
-        if(!$h) { $h = $this->owner->config()->grid_thumbnail_height;
+        if (!$w) {
+            $w = $this->owner->config()->grid_thumbnail_width;
         }
 
-        if($this->IsImage() && Director::fileExists($this->owner->Filename)) {
+        if (!$h) {
+            $h = $this->owner->config()->grid_thumbnail_height;
+        }
+
+        if ($this->IsImage() && Director::fileExists($this->owner->Filename)) {
             return $this->owner->CroppedImage($w, $h);
         }
 
         $sizes = Config::inst()->forClass(FileAttachmentField::class)->icon_sizes;
         sort($sizes);
 
-        foreach($sizes as $size) {
-            if($w <= $size) {
-                if($this->owner instanceof Folder) {
+        foreach ($sizes as $size) {
+            if ($w <= $size) {
+                if ($this->owner instanceof Folder) {
                     $file = $this->getFilenameForType('_folder', $size);
-                }
-                else {
+                } else {
                     $file = $this->getFilenameForType($this->owner->getExtension(), $size);
                 }
-                if(!file_exists(BASE_PATH.'/'.$file)) {
+
+                if (!file_exists(BASE_PATH . '/' . $file)) {
                     $file = $this->getFilenameForType('_blank', $size);
                 }
 

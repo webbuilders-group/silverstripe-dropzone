@@ -1,5 +1,4 @@
 <?php
-
 namespace UncleCheese\Dropzone;
 
 use SilverStripe\Assets\File;
@@ -14,15 +13,15 @@ use SilverStripe\ORM\DataObjectInterface;
  */
 class FileAttachmentFieldTrack extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         'ControllerClass' => 'Varchar(60)',
         'RecordID' => 'Int',
         'RecordClass' => 'Varchar(60)',
-    );
+    ];
 
-    private static $has_one = array(
+    private static $has_one = [
         'File' => File::class,
-    );
+    ];
 
     private static $table_name = 'FileAttachmentFieldTrack';
 
@@ -31,8 +30,8 @@ class FileAttachmentFieldTrack extends DataObject
         if (!$fileIDs) {
             return;
         }
-        $fileIDs = (array)$fileIDs;
-        $trackRecords = FileAttachmentFieldTrack::get()->filter(array('FileID' => $fileIDs));
+        $fileIDs = (array) $fileIDs;
+        $trackRecords = FileAttachmentFieldTrack::get()->filter(['FileID' => $fileIDs]);
         foreach ($trackRecords as $trackRecord) {
             $trackRecord->delete();
         }
@@ -41,6 +40,7 @@ class FileAttachmentFieldTrack extends DataObject
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
+
         if (!$this->exists()) {
             // Store record this file was tracked on.
             if (!$this->RecordID && Controller::has_curr()) {
@@ -74,7 +74,7 @@ class FileAttachmentFieldTrack extends DataObject
     public function Record()
     {
         if ($this->RecordClass && $this->RecordID) {
-            return DataObject::get_one($this->RecordClass, "ID = ".(int)$this->RecordID);
+            return DataObject::get_one($this->RecordClass, "ID = " . (int) $this->RecordID);
         }
     }
 }
