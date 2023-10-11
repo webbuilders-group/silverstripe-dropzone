@@ -230,13 +230,13 @@ class FileAttachmentField extends FileField
      */
     protected function defineFieldHolderRequirements()
     {
-        Requirements::javascript('unclecheese/dropzone:javascript/dropzone.js');
-        Requirements::javascript('unclecheese/dropzone:javascript/file_attachment_field.js');
+        Requirements::javascript('webbuilders-group/silverstripe-dropzone: javascript/dropzone.js');
+        Requirements::javascript('webbuilders-group/silverstripe-dropzone: javascript/file_attachment_field.js');
         if ($this->isCMS()) {
-            Requirements::javascript('unclecheese/dropzone:javascript/file_attachment_field_backend.js');
+            Requirements::javascript('webbuilders-group/silverstripe-dropzone: javascript/file_attachment_field_backend.js');
         }
 
-        Requirements::css('unclecheese/dropzone:css/file_attachment_field.css');
+        Requirements::css('webbuilders-group/silverstripe-dropzone: css/file_attachment_field.css');
 
         if (!$this->getSetting('url')) {
             $this->settings['url'] = $this->Link('upload');
@@ -1137,7 +1137,7 @@ class FileAttachmentField extends FileField
     public function RootThumbnailsDir()
     {
         return $this->getSetting('thumbnailsDir') ?:
-            ModuleResourceLoader::singleton()->resolveURL('unclecheese/dropzone:images/file-icons');
+            ModuleResourceLoader::singleton()->resolveURL('webbuilders-group/silverstripe-dropzone: images/file-icons');
     }
 
     /**
@@ -1172,7 +1172,7 @@ class FileAttachmentField extends FileField
      */
     public function DropzoneDir()
     {
-        return ModuleLoader::inst()->getManifest()->getModule('unclecheese/dropzone')
+        return ModuleLoader::inst()->getManifest()->getModule('webbuilders-group/silverstripe-dropzone')
             ->getResourcesDir();
     }
 
@@ -1403,7 +1403,7 @@ class FileAttachmentField extends FileField
      */
     protected function getDefaults()
     {
-        $file_path = ModuleLoader::inst()->getManifest()->getModule('unclecheese/dropzone')
+        $file_path = ModuleLoader::inst()->getManifest()->getModule('webbuilders-group/silverstripe-dropzone')
             ->getResource($this->config()->default_config_path)
             ->getPath();
         if (!file_exists($file_path)) {

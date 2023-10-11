@@ -11,7 +11,7 @@ use SilverStripe\ORM\DataExtension;
 /**
  * Adds helper methods to the core {@link File} object
  *
- * @package unclecheese/dropzone
+ * @package webbuilders-group/silverstripe-dropzone
  * @author  Uncle Cheese <unclecheese@leftandmain.com>
  */
 class DropzoneFile extends DataExtension
@@ -83,7 +83,7 @@ class DropzoneFile extends DataExtension
     protected function getFilenameForType($ext, $size)
     {
         return ModuleResourceLoader::singleton()->resolveURL(sprintf(
-            'unclecheese/dropzone:images/file-icons/%spx/%s.png',
+            'webbuilders-group/silverstripe-dropzone: images/file-icons/%spx/%s.png',
             $size,
             strtolower($ext)
         ));

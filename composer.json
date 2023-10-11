@@ -19,7 +19,6 @@
         "silverstripe/framework": "^4|^5"
     },
     "extra": {
-        "installer-name": "dropzone",
         "expose": [
             "javascript",
             "css",
