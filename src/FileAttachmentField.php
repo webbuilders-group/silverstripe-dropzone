@@ -706,7 +706,7 @@ class FileAttachmentField extends FileField
      */
     public function imagesOnly()
     {
-        $this->setAcceptedFiles(['.png','.gif','.jpeg','.jpg']);
+        $this->setAcceptedFiles(['gif', 'jpeg', 'jpg', 'png', 'bmp', 'webp']);
 
         return $this;
     }
