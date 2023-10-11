@@ -130,9 +130,11 @@ class FileAttachmentField extends FileField
     public static function camelise($str)
     {
         return preg_replace_callback(
-            '/_([a-z])/', function ($c) {
+            '/_([a-z])/',
+            function ($c) {
                 return strtoupper($c[1]);
-            }, $str
+            },
+            ($str ?? '')
         );
     }
 
@@ -1298,7 +1300,7 @@ class FileAttachmentField extends FileField
         $name = $this->getName();
         $record = $this->getRecord();
 
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $ext = pathinfo(($filename ?? ''), PATHINFO_EXTENSION);
         $defaultClass = File::get_class_for_file_extension($ext);
 
         if(empty($name) || empty($record)) {
