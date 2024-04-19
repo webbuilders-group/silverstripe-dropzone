@@ -673,21 +673,16 @@ class FileAttachmentField extends FileField
      * @param  array $files
      * @return FileAttachmentField
      */
-    public function setAcceptedFiles($files = [])
+    public function setAcceptedFiles(array $files = [])
     {
-        if (is_array($files)) {
-            $files = implode(',', $files);
-        }
-        $files = str_replace(' ', '', $files);
-        $this->settings['acceptedFiles'] = $files;
+        $acceptedFiles = array_map([$this, 'prefixExtension'], $files);
+        $this->settings['acceptedFiles'] = implode(',', $acceptedFiles);
 
         // Update validator
         $validator = $this->getValidator();
         if ($validator) {
-            $fileExts = explode(',', $files);
-
             $validatorExts = [];
-            foreach ($fileExts as $fileExt) {
+            foreach ($files as $fileExt) {
                 if ($fileExt && isset($fileExt[0]) && $fileExt[0] === '.') {
                     $fileExt = substr($fileExt, 1);
                 }
@@ -1503,4 +1498,14 @@ class FileAttachmentField extends FileField
 
         return $readonly;
     }
+
+    /**
+     * Prefixes a file extension with a dot if needed for dropzone's config
+     * @param string $ext Extension to prefix if needed
+     * @return string
+     */
+     protected function prefixExtension($ext)
+     {
+        return ($ext[0] != '.' ? '.' . $ext : $ext);
+     }
 }
