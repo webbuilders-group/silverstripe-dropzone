@@ -283,7 +283,7 @@ class FileAttachmentField extends FileField
         $ones = $record->hasOne();
 
         if (($relation = $this->getRelation($record))) {
-            $relation->setByIDList($this->Value());
+            $relation->setByIDList(($this->Value() ?: []));
         } else if (isset($ones[$fieldname])) {
             $record->{"{$fieldname}ID"} = $this->Value() ?: 0;
         } else if ($record->hasField($fieldname)) {
