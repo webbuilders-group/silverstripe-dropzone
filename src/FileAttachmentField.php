@@ -1,28 +1,28 @@
 <?php
 namespace UncleCheese\Dropzone;
 
-use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Manifest\ModuleManifest;
-use SilverStripe\Core\Manifest\ModuleResourceLoader;
-use SilverStripe\Forms\FileField;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\View\Requirements;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Folder;
+use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Assets\File;
-use SilverStripe\Assets\Folder;
-use SilverStripe\Assets\Image;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ManyManyList;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use SilverStripe\Forms\FileField;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\RelationList;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\UnsavedRelationList;
+use SilverStripe\View\Requirements;
+use Exception;
 
 /**
  * Defines the FileAttachementField form field type
@@ -39,11 +39,6 @@ class FileAttachmentField extends FileField
      */
     private static $allowed_actions = [
         'upload',
-        'handleSelect',
-    ];
-
-    private static $url_handlers = [
-        'select' => 'handleSelect',
     ];
 
     /**
@@ -188,9 +183,6 @@ class FileAttachmentField extends FileField
         $this->permissions['detach'] = true;
         $this->permissions['delete'] = function () use ($instance) {
             return Injector::inst()->get(File::class)->canDelete() && $instance->isCMS();
-        };
-        $this->permissions['attach'] = function () use ($instance) {
-            return $instance->isCMS();
         };
 
         $this->setFieldHolderTemplate(__NAMESPACE__ . '\\FileAttachmentField_holder');
@@ -859,7 +851,7 @@ class FileAttachmentField extends FileField
     {
         return Controller::curr() instanceof LeftAndMain;
     }
-    
+
     /**
      * @note   these are user-friendlier versions of internal PHP errors reported back in the ['error'] value of an upload
      * @return string
@@ -920,14 +912,14 @@ class FileAttachmentField extends FileField
             $error_message = _t('FileAttachmentField.UPLOADFORBIDDEN', 'Files cannot be uploaded via this form at the current time.');
             return $this->httpError(403, $error_message);
         }
-        
+
         // No files detected in the upload, this can occur if post_max_size is < the upload size
         $value = $request->postVar($name);
         if (empty($files) || empty($value)) {
             $error_message = _t('FileAttachmentField.NOFILESUPLOADED', 'No files were detected in your upload. Please try again later.');
             return $this->httpError(400, $error_message);
         }
-        
+
         // Security token check, must go after above check as a low post_max_size can scrub the Security Token name from the request
         $form = $this->getForm();
         if ($form) {
@@ -1001,21 +993,6 @@ class FileAttachmentField extends FileField
         $this->addValidFileIDs($ids);
         return new HTTPResponse(implode(',', $ids), 200);
     }
-
-
-    /**
-     * @param  HTTPRequest $request
-     * @return UploadField_ItemHandler
-     */
-    public function handleSelect(HTTPRequest $request)
-    {
-        if ($this->isDisabled() || $this->isReadonly() || !$this->CanAttach()) {
-            return $this->httpError(403);
-        }
-
-        return FileAttachmentField_SelectHandler::create($this, $this->getFolderName());
-    }
-
 
     /**
      * Deletes a file. Ensures user has permissions and the file is part
@@ -1209,16 +1186,6 @@ class FileAttachmentField extends FileField
     public function CanDetach()
     {
         return $this->checkPerm('detach');
-    }
-
-    /**
-     * Returns true if the "attach" permission returns true
-     *
-     * @return boolean
-     */
-    public function CanAttach()
-    {
-        return $this->checkPerm('attach');
     }
 
     /**
@@ -1487,7 +1454,6 @@ class FileAttachmentField extends FileField
     {
         $readonly = clone $this;
         $readonly->setPermissions([
-            'attach' => false,
             'detach' => false,
             'upload' => false,
             'delete' => false,

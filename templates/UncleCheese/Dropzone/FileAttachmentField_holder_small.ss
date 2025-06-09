@@ -8,12 +8,9 @@
                 <%t Dropzone.ATTACHFILEHERE_OR "Attach a file by dropping it in here." %>
             <% end_if %>
 
-            <% if $CanUpload && $CanAttach %><br><% end_if %>
-            <% if $CanUpload || $CanAttach %>
+            <% if $CanUpload %>
                 <% if $CanUpload %><%t Dropzone.YOUCANALSO "You can also" %> <% end_if %>
                 <% if $CanUpload %>[<a class="dropzone-select"><%t Dropzone.BROWSEYOURCOMPUTER "browse your computer" %></a>]<% end_if %>
-                <% if $CanUpload && $CanAttach %> <%t Dropzone.OR " or " %> <% end_if %>
-                <% if $CanAttach %>[<a class="dropzone-select-existing"><%t Dropzone.CHOOSEEXISTING "choose from existing files" %></a>]<% end_if %>
             <% end_if %>
 
         </p>
