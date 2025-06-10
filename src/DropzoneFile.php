@@ -5,8 +5,9 @@ use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
-use SilverStripe\ORM\DataExtension;
+
 
 /**
  * Adds helper methods to the core {@link File} object
@@ -14,7 +15,7 @@ use SilverStripe\ORM\DataExtension;
  * @package webbuilders-group/silverstripe-dropzone
  * @author  Uncle Cheese <unclecheese@leftandmain.com>
  */
-class DropzoneFile extends DataExtension
+class DropzoneFile extends Extension
 {
     /**
      * Helper method for determining if this is an Image

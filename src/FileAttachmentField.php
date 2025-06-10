@@ -13,8 +13,9 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\FileField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\ManyManyList;
@@ -484,11 +485,11 @@ class FileAttachmentField extends FileField
     /**
      * Check that the user is submitting the file IDs that they uploaded.
      *
-     * @return boolean
+     * @return ValidationResult
      */
-    public function validate($validator)
+    public function validate() : ValidationResult
     {
-        $result = true;
+        $result = new ValidationResult();
 
         // Detect if files have been removed between AJAX uploads and form submission
         $value = $this->dataValue();
@@ -498,15 +499,10 @@ class FileAttachmentField extends FileField
             // (Below validation isn't triggered as setValue() removes the invalid ID
             //  to prevent the CMS from loading something it shouldn't, also stops the
             //  validator from realizing there's an invalid ID.)
-            $validator->validationError(
-                $this->name,
-                _t(
-                    'FileAttachmentField.VALIDATION',
-                    'Invalid file ID sent.'
-                ),
-                "validation"
+            $result->addError(
+                'Invalid file ID sent.',
+                ValidationResult::TYPE_ERROR
             );
-            $result = false;
         } else if ($value && is_array($value)) {
             // Prevent a malicious user from inspecting element and changing
             // one of the <input type="hidden"> fields to use an invalid File ID.
@@ -514,18 +510,10 @@ class FileAttachmentField extends FileField
 
             foreach ($value as $id) {
                 if (!isset($validIDs[$id])) {
-                    if ($validator) {
-                        $validator->validationError(
-                            $this->name,
-                            _t(
-                                'FileAttachmentField.VALIDATION',
-                                'Invalid file ID sent %s.',
-                                ['id' => $id]
-                            ),
-                            "validation"
-                        );
-                    }
-                    $result = false;
+                    $result->addError(
+                        "Invalid file ID sent $id.",
+                        ValidationResult::TYPE_ERROR
+                    );
                 }
             }
         }
