@@ -502,7 +502,7 @@ class FileAttachmentField extends FileField
             $result->addError(
                 _t(
                     'FileAttachmentField.VALIDATION',
-                    'Invalid file ID sent.'
+                    'Invalid file ID sent.',
                 ),
                 ValidationResult::TYPE_ERROR
             );
@@ -516,8 +516,7 @@ class FileAttachmentField extends FileField
                     $result->addError(
                         _t(
                             'FileAttachmentField.VALIDATION',
-                            'Invalid file ID sent %s.',
-                            ['id' => $id]
+                            'Invalid file ID sent.',
                         ),
                         ValidationResult::TYPE_ERROR
                     );
