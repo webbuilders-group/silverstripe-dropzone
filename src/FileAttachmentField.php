@@ -20,7 +20,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\RelationList;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\View\Requirements;
 use Exception;
@@ -487,7 +487,7 @@ class FileAttachmentField extends FileField
      *
      * @return ValidationResult
      */
-    public function validate() : ValidationResult
+    public function validate(): ValidationResult
     {
         $result = new ValidationResult();
 
@@ -500,7 +500,10 @@ class FileAttachmentField extends FileField
             //  to prevent the CMS from loading something it shouldn't, also stops the
             //  validator from realizing there's an invalid ID.)
             $result->addError(
-                'Invalid file ID sent.',
+                _t(
+                    'FileAttachmentField.VALIDATION',
+                    'Invalid file ID sent.'
+                ),
                 ValidationResult::TYPE_ERROR
             );
         } else if ($value && is_array($value)) {
@@ -511,7 +514,11 @@ class FileAttachmentField extends FileField
             foreach ($value as $id) {
                 if (!isset($validIDs[$id])) {
                     $result->addError(
-                        "Invalid file ID sent $id.",
+                        _t(
+                            'FileAttachmentField.VALIDATION',
+                            'Invalid file ID sent %s.',
+                            ['id' => $id]
+                        ),
                         ValidationResult::TYPE_ERROR
                     );
                 }
@@ -956,7 +963,7 @@ class FileAttachmentField extends FileField
             }
 
             if ($this->getTrackFiles()) {
-                $controller = Controller::has_curr() ? Controller::curr() : null;
+                $controller = Controller::curr() ? Controller::curr() : null;
                 $formClass = ($form) ? get_class($form) : '';
 
                 $trackFile = FileAttachmentFieldTrack::create();

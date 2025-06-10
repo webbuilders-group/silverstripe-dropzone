@@ -43,7 +43,7 @@ class FileAttachmentFieldTrack extends DataObject
 
         if (!$this->exists()) {
             // Store record this file was tracked on.
-            if (!$this->RecordID && Controller::has_curr()) {
+            if (!$this->RecordID && Controller::curr()) {
                 $controller = Controller::curr();
                 $pageRecord = null;
                 if ($controller->hasMethod('data')) {
